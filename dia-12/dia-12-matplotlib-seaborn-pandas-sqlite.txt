@@ -1,0 +1,75 @@
+O código abaixo roda melhor em um jupyter notebook (por exemplo, Google Colab)
+
+
+### Parte 1: fazer o download dos dados e carregá-los no banco de dados ###
+
+!curl https://storage.googleapis.com/kaggle-data-sets/2268489/3806098/bundle/archive.zip?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=gcp-kaggle-com%40kaggle-161607.iam.gserviceaccount.com%2F20230124%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20230124T203559Z&X-Goog-Expires=259200&X-Goog-SignedHeaders=host&X-Goog-Signature=19c24d7e2455605e3f86b22e7cdd7812ad4406405a71dd7599ee49dce0877774e32271aadfeae743e9866b5556213bf3d2e0a30591f1804c384246b18a17685fada710f81b21bba7dcd04d8fec4cc06ba586b6389b8981518f89e2b2277e89703c4dbf56ea931a6a03cb9769a0eb599834ae531c95c387e6c62ff0396b0d01aa3cdfa3dc60015f68abd65294f0c423bdb1314bd8a23416fac467fd06faf95813127ccfe7029124a712879e243153bd94e45b942c44ca7a0e34ef185ec8a60b97f6166fb58537697fa236aa7a3e231929a8940546627ec3225d74264f591d49771895b132750fb44b15822139378326e0fa49e28e05e2e7526724eeef14052148
+
+
+
+
+### Parte 2: fazer o upload no SQLite ###
+
+Se vire!
+
+
+
+
+### Parte 3: Carregar a extensão no Jupyter Notebook ###
+
+%load_ext sql
+
+
+
+
+### Parte 4: garantir a instalação do pandas ###
+
+!pip install -q pandas==1.1.5
+
+
+
+
+### Parte 5: importar as dependências ###
+
+import csv, sqlite 3
+import pandas as pd
+
+
+
+
+### Parte 6: criar uma conexão e um cursor ###
+
+conexao = sqlite3.connect("salarios.db")
+cursor = conexao.cursor()
+
+
+
+
+### Parte 7: acessar o banco de dados de fato ###
+
+%sql sqlite:///salarios.db >>>>> Esse comando só funciona em um notebook
+
+
+
+
+### Parte 8: levar o arquivo CSV para o banco de dados ###
+
+df = pd.read_csv('LINK DO ARQUIVO CSV')
+df.to_sql("dados_salarios", con, if_exists='replace', index=False, method="multi")
+
+
+
+
+### Parte 9: fazer algumas consultas ###
+# Conferir se o dataset foi importado corretamente - checar os dados
+%sql SELECT * FROM dados_salarios LIMIT 5;
+
+# Conferir se a quantidade de linhas da tabela está correta
+%sql SELECT COUNT(*) FROM dados_salarios;
+
+#Encontrar o maior salário de todos
+%sql SELECT MAX(salario) FROM dados_salarios;
+
+#Listar os salários em ordem descendente de valor
+%sql SELECT * FROM dados_salarios ORDER BY salario DESC NULLS LAST FETCH FIRST ROW ONLY
+
